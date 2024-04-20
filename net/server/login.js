@@ -20,7 +20,6 @@ const localServer = class orginizeMapleLogin {
 
     pinger() {
         packetHandler.setHandler(0x0018, client => { /// PONG
-            console.log("does it even get ponged?")
             client.responseTime = new Date().getTime()
             client.ponged = true;
             client.numNonResponses = 0;
@@ -46,7 +45,7 @@ const localServer = class orginizeMapleLogin {
                 if (client.numNonResponses === undefined) {
                     client.numNonResponses = 0;
                 }
-        
+                // TODO: add server send packets instead of waiting for client to prevent afks crash
                 if (client.ponged !== 'undefined') { // Disconnect crashed players.
                     if (client.ponged === false) {
                         client.numNonResponses++;

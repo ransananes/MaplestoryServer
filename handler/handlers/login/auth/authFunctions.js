@@ -3,7 +3,7 @@
 // Declare a function to send a packet based on the login result
 function sendPacketBasedOnLoginResult(client, packet, resultCode) {
     if (resultCode === 0) {
-      getAuthSuccess(packet, client.info);
+      getAuthSuccess(packet, client);
     } else {
       getAuthFailed(packet, resultCode);
     }

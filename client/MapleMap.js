@@ -1,6 +1,7 @@
 let maps = new Map();
 
-global.getMap = (MapID) => {
+// attach it to global obj
+global.getMap = function getMap (MapID) {
     const MapCategory = Math.floor(Number(MapID) / 100000000);
     const fullMapID = MapID.toString().padStart(9, 0);
     let Map = DataFiles.map.GetPath(`Map/Map${MapCategory}/${fullMapID}.img`);

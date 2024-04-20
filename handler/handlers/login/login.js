@@ -8,11 +8,7 @@ packetHandler.setHandler(0x0001, async (client, reader) => {
 
   // Handle the login attempt
   try {
-    const loginOk = await client.getUserFromDB(
-      username,
-      password,
-      config.AUTO_REGISTER
-    );
+    const loginOk = await client.getUserFromDB(username, password);
     sendPacketBasedOnLoginResult(client, packet, loginOk);
   } catch (exception) {
     sendPacketBasedOnLoginResult(client, packet, 25); // 25 indicates an exception occurred

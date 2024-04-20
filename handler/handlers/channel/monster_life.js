@@ -11,14 +11,14 @@ packetHandler.setHandler(0x00BC, function (client, reader) {
     reader.skip(13);
 
     const MonsterMove = MapleLife.decodeMovePath(reader, false);
-    const curretMap = getMap(client.getPlayer().mapId);
-    const mapMonster = curretMap.lifePool.getMapObject(objectid);
+    const currentMap = getMap(client.getPlayer().mapId);
+    const mapMonster = currentMap.lifePool.getMapObject(objectid);
 
     if(MonsterMove.length === 0) return;
     const MoveRes = moveMonsterResponse(objectid, moveid, 0, 0, 0, 0);
     const Move = moveMonster(objectid, skillByte, skill, skillId, skillLv, pOption, skill_4)
     MapleLife.encodeMovePath(MonsterMove, Move);
-    curretMap.broadcastPacket(Move);
+    currentMap.broadcastPacket(Move);
     client.getSocket().sendPacket(MoveRes);
 });
 

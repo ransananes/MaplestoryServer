@@ -8,13 +8,11 @@ function EnterChannel(client, character) {
         }
     }
 
-   // console.log(character);
     // Remote-hack vulnerable
     const packet = new PacketWriter(0x007D);
     packet.writeInt8(1);
     packet.writeInt8(1);
     packet.writeUInt32(character.id);
-    console.log(packet);
     character.addStats(packet);
     character.addAvatar(packet);
     client.getSocket().sendPacket(packet);
@@ -22,7 +20,7 @@ function EnterChannel(client, character) {
 
 packetHandler.setHandler(0x0013, async function (client, reader) {
     // Select character
-    if (!client.info || !client.info.username) {
+    if (!client.account || !client.account.username) {
 		client.disconnect();
 		return;
 	}

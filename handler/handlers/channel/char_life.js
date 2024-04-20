@@ -1,11 +1,11 @@
 const MapleLife = require('../../../client/MapleLife');
 
 packetHandler.setHandler(0x00DF, function (client, reader) {
-    console.log("$$$$$$$$$$$")
+    console.log("player update, op code :223")
 });
 
 
-
+// handle player movement
 packetHandler.setHandler(0x0029, async function (client, reader) {
     const portal = reader.readUInt8();
     reader.skip(9); // unique value per-map?
@@ -26,5 +26,5 @@ packetHandler.setHandler(0x0029, async function (client, reader) {
     const packet = new PacketWriter(0x00B9);
 	packet.writeUInt32(client.getPlayer().id);
 	MovableLife.encodeMovePath(movePath, packet);
-	//getMap(client.getPlayer().mapId).broadcastPacket(packet, client); todo fix later
+	//getMap(client.getPlayer().mapId).broadcastPacket(packet, client);
 });

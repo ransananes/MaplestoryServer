@@ -47,10 +47,10 @@
 
      acceptTOS(accepted) {
         return new Promise((resolve, reject) => {
-            let sql_query = `UPDATE accounts SET tos =${accepted} WHERE id = ${this.client.id}`;
+            let sql_query = `UPDATE accounts SET tos =${accepted} WHERE id = ${this.account.id}`;
             sqlConn.query(sql_query, (error, results) => {
                 if (error) return reject(error);
-                console.log('Data updated successfully');
+                console.log('TOS updated successfully');
                 resolve(true);
             });
         });
@@ -105,7 +105,7 @@
 
      getCharactersFromDB() {
          return new Promise((resolve, reject) => {
-             let sql = `SELECT * FROM characters WHERE accountid=${this.info.id} AND world=${sqlConn.escape(this.getWorld())}`;
+             let sql = `SELECT * FROM characters WHERE accountid=${this.account.id} AND world=${sqlConn.escape(this.getWorld())}`;
              sqlConn.query(sql, (error, results) => {
                  if (error) return reject(error);
                  const MapleCharacter = require('./MapleCharacter');
@@ -144,23 +144,24 @@
          });
      }
 
-     getUserFromDB(username, password, autoRegister = true) {
+     getUserFromDB(username, password) {
          return new Promise((resolve, reject) => {
-             sqlConn.query(`SELECT * FROM accounts WHERE username = ${sqlConn.escape(username)}`, async (error, results) => {
-                 if (error) return reject(error);
+                sqlConn.query(`SELECT * FROM accounts WHERE username = ${sqlConn.escape(username)}`, async (error, results) => {
+                if (error) return reject(error);
                  const bcrypt = require('bcrypt');
-                 if (autoRegister === true && results.length === 0) {
+                 // create an account for now, #autoregister
+                 if (results.length === 0) {
                      const hash = await bcrypt.hash(password, 10);
                      await sqlConn.query(`INSERT INTO accounts (username, password) VALUES (${sqlConn.escape(username)}, '${hash}')`);
                      // Get the last inserted id
                      sqlConn.query(`SELECT * FROM accounts WHERE username = ${sqlConn.escape(username)}`, async (error, results) => {
-                        this.client = results[0];
+                     this.account = results[0];
                     });
                      return resolve(23);
                  } else {
-                     const isVaildPass = await bcrypt.compare(password, results[0].password);
+                     this.account = results[0];
+                     const isVaildPass = await bcrypt.compare(password, this.account.password);
                      if (!isVaildPass) return resolve(4);
-                     this.info = results[0];
                      return resolve(0);
                  }
              });
@@ -179,7 +180,7 @@
 
      deleteCharacter(characterId) {
          return new Promise((resolve, reject) => {
-             sqlConn.query(`DELETE FROM characters WHERE accountid=${this.info.id} AND id=${characterId} AND world=${this.getWorld()}`, async (error, results) => {
+             sqlConn.query(`DELETE FROM characters WHERE accountid=${this.account.id} AND id=${characterId} AND world=${this.getWorld()}`, async (error, results) => {
                  if (error) return reject(error);
                  return resolve(true);
              });
