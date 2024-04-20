@@ -45,9 +45,30 @@
          this._serverIV = serverIV;
      }
 
-     getSingleCharacterFromDB(){
+     acceptTOS(accepted) {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT * FROM characters WHERE id=${this.info.char_id} LIMIT 1`;
+            let sql_query = `UPDATE accounts SET tos =${accepted} WHERE id = ${this.client.id}`;
+            sqlConn.query(sql_query, (error, results) => {
+                if (error) return reject(error);
+                console.log('Data updated successfully');
+                resolve(true);
+            });
+        });
+ }
+    //  getUser() {
+    //         return new Promise((resolve, reject) => {
+    //             console.log(this.info);
+    //             console.log(this);
+    //             let sql = `SELECT * FROM accounts WHERE id=${this.info.accountid} LIMIT 1`;
+    //             sqlConn.query(sql, (error, results) => {
+    //                 if (error) return reject(error);
+    //                 resolve(true);
+    //             });
+    //         });
+    //  }
+     getSingleCharacterFromDB(charID){
+        return new Promise((resolve, reject) => {
+            let sql = `SELECT * FROM characters WHERE id=${charID} LIMIT 1`;
             sqlConn.query(sql, (error, results) => {
                 if (error) return reject(error);
                 results = results[0];
@@ -75,7 +96,7 @@
                 MapleCharacter.stats.fame = results.fame;
                 MapleCharacter.meso = results.meso;
                 MapleCharacter.mapId = results.map === 0 ? 10000 : results.map;
-                //MapleCharacter.mapPos = results.spawnpoint;
+                MapleCharacter.mapPos = results.spawnpoint;
 
                 resolve(MapleCharacter);
             });
@@ -131,6 +152,10 @@
                  if (autoRegister === true && results.length === 0) {
                      const hash = await bcrypt.hash(password, 10);
                      await sqlConn.query(`INSERT INTO accounts (username, password) VALUES (${sqlConn.escape(username)}, '${hash}')`);
+                     // Get the last inserted id
+                     sqlConn.query(`SELECT * FROM accounts WHERE username = ${sqlConn.escape(username)}`, async (error, results) => {
+                        this.client = results[0];
+                    });
                      return resolve(23);
                  } else {
                      const isVaildPass = await bcrypt.compare(password, results[0].password);

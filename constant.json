@@ -8,9 +8,9 @@
     "ENABLE_PIC": false,
     "PERFECT_PITCH": false,
     "WORLD_RANKING": false,
-    "EVENTS": "automsg KerningPQ Boats Subway AirPlane elevator",
+    "EVENTS": "test",
     "HOST": "localhost",
     "DB_USER": "root",
     "DB_PASS": "",
-    "DB_SELECT": "nodems"
+    "DB_SELECT": "mapleheroic"
 }

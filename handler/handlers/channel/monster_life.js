@@ -1,4 +1,4 @@
-const MapleLife = new (require('../../client/MapleLife'))();
+const MapleLife = new (require('../../../client/MapleLife'))();
 packetHandler.setHandler(0x00BC, function (client, reader) {
     const objectid = reader.readInt32();
     const moveid = reader.readInt16();

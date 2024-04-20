@@ -67,7 +67,6 @@ const serverInstance = class serverInstance {
 
 const instance = new serverInstance();
 instance.addProcess('channel', 'Scania', 7575);
-instance.addProcess('channel', 'Bellocan', 7576);
 
 instance.addProcess('login', Array.from(instance.process, ([name, value]) => {
     value.spawnargs[2][2] = value.pid;

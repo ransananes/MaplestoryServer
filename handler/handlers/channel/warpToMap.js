@@ -1,6 +1,6 @@
-const MapleCharacter = require("../../client/MapleCharacter");
-const MapleInventory = require('../../client/MapleInventory')
-const MapleItem = require('../../client/MapleItem');
+const MapleCharacter = require("../../../client/MapleCharacter");
+const MapleInventory = require('../../../client/MapleInventory')
+const MapleItem = require('../../../client/MapleItem');
 
 packetHandler.setHandler(0x0014, async function (client, reader) {
     const char_id = reader.readUInt32();

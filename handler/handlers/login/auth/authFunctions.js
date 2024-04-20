@@ -1,39 +1,37 @@
-packetHandler.setHandler(0x0001, async (client, reader) => { // LOGIN_PASSWORD
-    const username = reader.readString();
-    const password = reader.readString();
-    const loginOk = await client.getUserFromDB(username, password, config.AUTO_REGISTER);
+// authFunctions.js
 
-    const packet = new PacketWriter(0x0000);
-    if (loginOk !== 0) {
-        getLoginFailed(packet, loginOk);
+// Declare a function to send a packet based on the login result
+function sendPacketBasedOnLoginResult(client, packet, resultCode) {
+    if (resultCode === 0) {
+      getAuthSuccess(packet, client.info);
     } else {
-        getAuthSuccess(packet, client.info);
+      getAuthFailed(packet, resultCode);
     }
-
     client.getSocket().sendPacket(packet);
-});
-
-function getAuthSuccess(packet, account) {
-    packet.writeUInt16(0); // status OK
-    packet.writeUInt32(0);
-
+  }
+  
+  function getAuthSuccess(packet, account) {
+    packet.writeUInt32(0); // status OK
+    packet.writeUInt16(0);
+  
     const numToHex = parseInt(String(account.id).substr(0, 8), 16); // max length 8, parse to base 16.
     packet.writeUInt32(numToHex);
     packet.writeUInt8(0);
-    packet.writeUInt8(account.gm > 0 ? 0x40 : 0); // Admin flag
+    packet.writeUInt8(0); // Admin flag
     packet.writeUInt8(0);
     packet.writeUInt8(0);
     packet.writeString(account.username);
     packet.writeUInt8(0);
     packet.writeUInt8(0); // muteReason
     packet.writeUInt64(0); // muteResetDate
-    packet.writeDate(account.createdat); // creationDate
+    packet.writeUInt64(0); // creationDate
     packet.writeUInt32(0);
     // PIC info
-    packet.writeUInt16(true);
-}
-
-function getLoginFailed(packet, reason) {
+    packet.writeUInt8(0);
+    packet.writeUInt8(0);
+  }
+  
+  function getAuthFailed(packet, reason) {
     /**
      * reason:
      *  0: Correct data, getAuthSuccess
@@ -51,18 +49,20 @@ function getLoginFailed(packet, reason) {
      */
     packet.writeUInt16(reason); // 4 invaild password || 7 already loggedin
     packet.writeUInt32(0);
-}
-
-function getPermBan(packet, reason) {
+  }
+  
+  function getPermBan(packet, reason) {
     packet.writeUInt16(2); // is banned
     packet.writeUInt32(0);
     packet.writeUInt8(reason); // without reason.
     packet.writeDate(0); // infinity
-}
-
-function getTempBan(packet, timestampTill, reason) {
+  }
+  
+  function getTempBan(packet, timestampTill, reason) {
     packet.writeUInt16(2); // is banned
     packet.writeUInt32(0);
     packet.writeUInt8(reason);
     packet.writeDate(timestampTill);
-}
+  }
+  
+module.exports = {sendPacketBasedOnLoginResult, getAuthSuccess, getAuthFailed, getPermBan, getTempBan };

@@ -16,7 +16,7 @@ const localServer = class orginizeMapleChannel {
             host: config.HOST || 'localhost',
             user: config.DB_USER || 'root',
             password: config.DB_PASS || '',
-            database: config.DB_SELECT || 'nodems'
+            database: config.DB_SELECT || 'mapleheroic'
         };
     }
 
@@ -78,7 +78,7 @@ const localServer = class orginizeMapleChannel {
         global.packetReader = PacketReader;
         global.packetHandler = new PacketHandler();
         global.sqlConn = this.connSQL();
-        packetHandler.forAllFiles(`${process.cwd()}/handler/channel`, '*.js', fileName => require(fileName));
+        packetHandler.forAllFiles(`${process.cwd()}\\handler\\handlers`, '*.js', fileName => require(fileName));
     }
 }
 

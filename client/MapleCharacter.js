@@ -68,7 +68,7 @@ module.exports = class MapleCharacter {
     }
 
     addStats(writer) {
-        writer.writeUInt32(this.id);
+        // writer.writeUInt32(this.id);
         writer.writeString(this.name, 13);
         writer.writeUInt8(this.gender);
         writer.writeUInt8(this.skin);
@@ -79,7 +79,7 @@ module.exports = class MapleCharacter {
         writer.writeUInt64(0);
         writer.writeUInt64(0);
 
-        writer.writeUInt8(this.stats.level);
+        writer.writeUInt16(this.stats.level);
         writer.writeUInt16(this.stats.job);
         writer.writeUInt16(this.stats.str);
         writer.writeUInt16(this.stats.dex);
@@ -93,7 +93,7 @@ module.exports = class MapleCharacter {
         writer.writeUInt16(this.stats.sp);
         writer.writeUInt32(this.stats.exp);
         writer.writeUInt16(this.stats.fame);
-        writer.writeUInt32(0); // Gachapon EXP
+        //writer.writeUInt32(0); // Gachapon EXP
 
         writer.writeUInt32(this.mapId);
         writer.writeUInt8(this.mapPos);

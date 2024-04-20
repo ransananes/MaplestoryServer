@@ -1,4 +1,4 @@
-const NPCScriptManager = new (require('../../scripts/NPCScriptManager'))();
+const NPCScriptManager = new (require('../../../scripts/NPCScriptManager'))();
 
 packetHandler.setHandler(0x003A, function (client, reader) {
     const objectid = reader.readUInt32(); // npc object id

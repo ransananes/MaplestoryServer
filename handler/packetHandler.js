@@ -1,3 +1,9 @@
+const path = require('path');
+const fs = require('fs');
+
+// directories to exclude while handling packets
+const excludeDirs = require('./handlers/login/auth/excludeDirs');
+
 module.exports = class packetHandler {
     constructor() {
         this._handlers = new Map();
@@ -34,62 +40,34 @@ module.exports = class packetHandler {
         console.log(packet.buffer);
     }
 
-    forAllFiles(folder, filter, callback) {
-        let filters = filter || '*';
-        filters = filters.split(';');
-
-        for (const filter in filters) {
-            let tmp = filters[filter].split('*'); // For things like '*.png' and 'hurr*.txt' (['hurr', '.txt'])
-
-            let tmp2 = [];
-            // Filter empty values
-            for (let i = 0; i < tmp.length; i++)
-                if (tmp[i] !== '') tmp2.push(tmp[i]);
-
-            filters[filter] = tmp2;
-        }
-
-        require('fs').readdirSync(folder).forEach((fileName) => {
-            // Check if filename is okay
-            if (this.checkFileFilter(fileName, filters)) {
-                console.log(`[Handler-loader] Loading ${fileName}...`);
-                callback(folder + '/' + fileName, fileName);
-                console.log(`[Handler-loader] ${fileName} loaded...`);
+    findJSFiles(directoryPath, files = [], filter) {
+        const items = fs.readdirSync(directoryPath);
+    
+        items.forEach(item => {
+            const itemPath = path.join(directoryPath, item);
+            const stats = fs.statSync(itemPath);
+    
+            if (stats.isDirectory()) {
+                if (!excludeDirs.includes(item)) {
+                    // Recursively search subdirectories
+                    this.findJSFiles(itemPath, files, filter);
+                }
+            } else if (stats.isFile() && path.extname(item) === filter) {
+                // Add JavaScript files to the list
+                files.push(itemPath);
             }
         });
+    
+        return files;
     }
 
-    checkFileFilter(fileName, filters) {
-        for (var filter in filters) {
-            var curFilter = filters[filter];
-            var okay = false;
-            if (curFilter.length == 1) {
-                if (curFilter[0] === '') // All filter
-                    return true;
-
-                // 'hurrdurr.txt' === '.txt' ?
-
-                if (fileName.indexOf(curFilter[0]) !== -1) return true;
-            } else {
-                var offset = 0;
-                var found = true;
-
-                for (var i = 0; i < curFilter.length; i++) {
-                    var text = curFilter[i];
-                    if (text === '') continue;
-                    // text = '.'
-                    var tmp = fileName.indexOf(text, offset);
-                    if (tmp === -1) {
-                        found = false;
-                        break; // Continue with next filter
-                    }
-                    offset = tmp + 1;
-                }
-
-                if (found) return true;
-            }
-        }
-
-        return false;
+    forAllFiles(folder, filter, callback) {
+        let files = this.findJSFiles(folder,[],filter);
+        files.forEach((file) => {            
+            // Check if filename is okay
+            console.log(`[Handler-loader] Loading ${file}...`);
+            callback(file, path.basename(file));
+            console.log(`[Handler-loader] ${file} loaded...`);
+        });
     }
 };

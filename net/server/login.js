@@ -20,8 +20,10 @@ const localServer = class orginizeMapleLogin {
 
     pinger() {
         packetHandler.setHandler(0x0018, client => { /// PONG
+            console.log("does it even get ponged?")
             client.responseTime = new Date().getTime()
             client.ponged = true;
+            client.numNonResponses = 0;
         });
         return setInterval(() => { // PING
             const clients = (this.server.clients || this.clients);
@@ -29,25 +31,38 @@ const localServer = class orginizeMapleLogin {
             for (const [socket, client] of clients) {
                 const now = new Date().getTime();
                 const resSecTimeLimit = 150; // 2.5 min to response
+                const maxNonResponses = 5; // Adjust this to change the number of non-responses allowed
                 const packet = new PacketWriter(0x0011);
+                
                 if (typeof client.responseTime === 'number') { // Disconnect slow connection players.
                     if ((now - client.responseTime) >= (resSecTimeLimit * 1000)) {
-                        client.disconnect('Ping timeout');
+                        client.disconnect('Ping timeout 1 ');
                         this.server.clients.delete(socket);
                     }
                 } else {
                     client.responseTime = now;
                 }
+                
+                if (client.numNonResponses === undefined) {
+                    client.numNonResponses = 0;
+                }
+        
                 if (client.ponged !== 'undefined') { // Disconnect crashed players.
                     if (client.ponged === false) {
-                        client.disconnect('Ping timeout');
-                        this.server.clients.delete(socket);
+                        client.numNonResponses++;
+                        if (client.numNonResponses >= maxNonResponses) {
+                            client.disconnect('Ping timeout 2');
+                            this.server.clients.delete(socket);
+                        }
+                    } else {
+                        client.numNonResponses = 0;
                     }
                 }
+                
                 client.ponged = false;
                 socket.sendPacket(packet);
             }
-        }, 15000); // Check every 15 sec if player response.
+        }, 5000);// Check every 15 sec if player response.
     }
 
     initialize() {
@@ -63,7 +78,7 @@ const localServer = class orginizeMapleLogin {
         global.packetHandler = new PacketHandler();
         global.avaibleWorlds = this.avaibleWorlds;
         global.sqlConn = this.connSQL();
-        packetHandler.forAllFiles(`${process.cwd()}/handler/login`, '*.js', fileName => require(fileName));
+        packetHandler.forAllFiles(`${process.cwd()}/handler/`, '.js', fileName => require(fileName));
     }
 
     connSQL() {
