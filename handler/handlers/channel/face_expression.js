@@ -1,4 +1,6 @@
-packetHandler.setHandler(0x0033, function (client, reader) {
+const PacketHandler = require('../../PacketHandler');
+
+PacketHandler.getInstance().setHandler(0x0033, function (client, reader) {
     const emote = reader.readInt16();
     if (emote > 7) { // Special emote.
         const emoteid = 5159992 + emote; 

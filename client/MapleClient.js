@@ -1,3 +1,5 @@
+const MapleServer = require('../net/MapleServer');
+
  module.exports = class MapleClient {
      constructor(socket, clientIV, serverIV) {
          this._serverIV = serverIV;
@@ -69,7 +71,7 @@
      getSingleCharacterFromDB(charID){
         return new Promise((resolve, reject) => {
             let sql = `SELECT * FROM characters WHERE id=${charID} LIMIT 1`;
-            sqlConn.query(sql, (error, results) => {
+            MapleServer.getInstance().sqlConnection.query(sql, (error, results) => {
                 if (error) return reject(error);
                 results = results[0];
                 const MapleCharacter = new (require('./MapleCharacter'));
@@ -105,8 +107,8 @@
 
      getCharactersFromDB() {
          return new Promise((resolve, reject) => {
-             let sql = `SELECT * FROM characters WHERE accountid=${this.account.id} AND world=${sqlConn.escape(this.getWorld())}`;
-             sqlConn.query(sql, (error, results) => {
+             let sql = `SELECT * FROM characters WHERE accountid=${this.account.id} AND world=${this.getWorld()}`;
+             MapleServer.getInstance().sqlConnection.query(sql, (error, results) => {
                  if (error) return reject(error);
                  const MapleCharacter = require('./MapleCharacter');
                  let charList = [];
@@ -146,7 +148,7 @@
 
      getUserFromDB(username, password) {
          return new Promise((resolve, reject) => {
-                sqlConn.query(`SELECT * FROM accounts WHERE username = ${sqlConn.escape(username)}`, async (error, results) => {
+                MapleServer.getInstance().sqlConnection.query(`SELECT * FROM accounts WHERE username=${username}`, async (error, results) => {
                 if (error) return reject(error);
                  const bcrypt = require('bcrypt');
                  // create an account for now, #autoregister

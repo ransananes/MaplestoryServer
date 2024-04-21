@@ -1,4 +1,6 @@
-packetHandler.setHandler(0x0064, function (client, reader) {
+const PacketHandler = require('../../PacketHandler');
+
+PacketHandler.getInstance().setHandler(0x0064, function (client, reader) {
 	// Enter scripted portal
 	reader.readInt8();
 	const portalName = reader.readString();
@@ -10,7 +12,7 @@ packetHandler.setHandler(0x0064, function (client, reader) {
 	PortalScriptManager.executePortalScript(client, portalData);
 });
 
-packetHandler.setHandler(0x0026, function (client, reader) {
+PacketHandler.getInstance().setHandler(0x0026, function (client, reader) {
 	// Enter regular portal
 	
 	const portals = reader.readUInt8();

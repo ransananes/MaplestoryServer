@@ -4,7 +4,7 @@ const fs = require('fs');
 // directories to exclude while handling packets
 const excludeDirs = require('./handlers/login/auth/excludeDirs');
 
-module.exports = class packetHandler {
+module.exports = class PacketHandler {
     constructor() {
         this._handlers = new Map();
         this._skipedHandelers = new Set();
@@ -40,13 +40,11 @@ module.exports = class packetHandler {
         console.log(packet.buffer);
     }
 
-    findJSFiles(directoryPath, files = [], filter) {
+    findJSFiles(directoryPath, files, filter) {
         const items = fs.readdirSync(directoryPath);
-    
         items.forEach(item => {
             const itemPath = path.join(directoryPath, item);
             const stats = fs.statSync(itemPath);
-    
             if (stats.isDirectory()) {
                 if (!excludeDirs.includes(item)) {
                     // Recursively search subdirectories
@@ -57,7 +55,6 @@ module.exports = class packetHandler {
                 files.push(itemPath);
             }
         });
-    
         return files;
     }
 
@@ -70,4 +67,12 @@ module.exports = class packetHandler {
             console.log(`[Handler-loader] ${file} loaded...`);
         });
     }
+
+    static getInstance() {
+        if (!PacketHandler.instance) {
+            PacketHandler.instance = new PacketHandler();
+        }
+        return PacketHandler.instance;
+    }
+    
 };

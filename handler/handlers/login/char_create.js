@@ -1,3 +1,5 @@
+const PacketHandler = require('../../PacketHandler');
+
 function checkNameValidity(name) {
 	let forbidden = false;
 	if (name.length >= 4 && name.length <= 12)
@@ -35,7 +37,7 @@ function checkItemValidity(job, female, element, objectId) {
 	return valid;
 }
 
-packetHandler.setHandler(0x0015, function (client, reader) {
+PacketHandler.getInstance().setHandler(0x0015, function (client, reader) {
 	// Check character name
 	const name = reader.readString();
 	const taken = checkNameValidity(name);
@@ -46,7 +48,7 @@ packetHandler.setHandler(0x0015, function (client, reader) {
 	client.getSocket().sendPacket(packet);
 });
 
-packetHandler.setHandler(0x0016, function (client, reader) {
+PacketHandler.getInstance().setHandler(0x0016, function (client, reader) {
 	// Create character
 	const name = reader.readString();
 	const type = reader.readUInt32();

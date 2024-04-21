@@ -1,5 +1,7 @@
 const MapleCommandsProccesor = require('../../../client/MapleCommands');
-packetHandler.setHandler(0x0031, function (client, reader) {
+const PacketHandler = require('../../PacketHandler');
+
+PacketHandler.getInstance().setHandler(0x0031, function (client, reader) {
 	if (!client.getPlayer()) {
 		client.disconnect('Trying to chat while not loaded.');
 		return;

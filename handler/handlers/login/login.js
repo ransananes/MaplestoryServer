@@ -1,6 +1,9 @@
+const PacketHandler = require("../../PacketHandler");
+const PacketWriter = require("../../../net/MapleWriter");
 const { sendPacketBasedOnLoginResult } = require("./auth/authFunctions");
+const MapleServer = require("../../../net/MapleServer");
 
-packetHandler.setHandler(0x0001, async (client, reader) => {
+PacketHandler.getInstance().setHandler(0x0001, async (client, reader) => {
   // LOGIN_PASSWORD
   const username = reader.readString();
   const password = reader.readString();

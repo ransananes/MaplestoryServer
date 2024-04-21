@@ -1,12 +1,9 @@
+const PacketHandler = require('../../PacketHandler');
+const PacketWriter = require('../../../net/MapleWriter');
+
 function EnterChannel(client, character) {
     const world = client.getWorld();
     let localPort = 7575;
-    for (const {worldId, port} of avaibleWorlds.values()) {
-        if (world === worldId) {
-            localPort = port;
-            break;
-        }
-    }
 
     // Remote-hack vulnerable
     const packet = new PacketWriter(0x007D);
@@ -18,7 +15,7 @@ function EnterChannel(client, character) {
     client.getSocket().sendPacket(packet);
 }
 
-packetHandler.setHandler(0x0013, async function (client, reader) {
+PacketHandler.getInstance().setHandler(0x0013, async function (client, reader) {
     // Select character
     if (!client.account || !client.account.username) {
 		client.disconnect();
@@ -33,7 +30,7 @@ packetHandler.setHandler(0x0013, async function (client, reader) {
 });
 
 
-packetHandler.setHandler(0x001E, async function (client, reader) {
+PacketHandler.getInstance().setHandler(0x001E, async function (client, reader) {
     // Select character using PIC
 
     const pic = reader.readString();

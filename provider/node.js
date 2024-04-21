@@ -100,19 +100,19 @@ module.exports = class node {
 		return this.data;
 	}
 
-	GetPath(pPath) {
+	GetPath (pPath) {
 		// Searches for the specified path. For example, 'Tips.img/all/0' will go into Tips.img first, then all, then 0
 		// Returns null if any of the nodes were not found
-		const elements = pPath.split('/');
-		let currentNode = this;
-
-		for (let i = 0; i < elements.length; i++) {
-			let nextNode = currentNode.Child(elements[i]);
+		var elements = pPath.split('/');
+		var currentNode = this;
+		
+		for (var i = 0; i < elements.length; i++) {
+			var nextNode = currentNode.Child(elements[i]);
 			if (nextNode === null) return null;
-
+			
 			currentNode = nextNode;
 		}
-
+		
 		return currentNode;
 	}
 };

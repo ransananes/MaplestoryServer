@@ -1,20 +1,26 @@
-let maps = new Map();
+const MapleServer = require('../net/MapleServer');
+
+var maps = new Map();
 
 // attach it to global obj
-global.getMap = function getMap (MapID) {
+function getMap (MapID) {
     const MapCategory = Math.floor(Number(MapID) / 100000000);
     const fullMapID = MapID.toString().padStart(9, 0);
-    let Map = DataFiles.map.GetPath(`Map/Map${MapCategory}/${fullMapID}.img`);
-    if (Map === null) return null;
+    let Map = MapleServer.getInstance().DataFiles.map.GetPath(`Map/Map${MapCategory}/${fullMapID}.img`);
+    if (Map === null) 
+    {   
+        return  null;}
     if (!maps.has(MapID)) {
         maps.set(MapID, new MapleMap(Map));
     }
     return maps.get(MapID);
 }
 
+module.exports = { getMap };
+
 function findStringNXMapNode(mapid) {
     let node = null;
-    DataFiles.string.GetPath('Map.img').ForEach((CityMap) => {
+    MapleServer.getInstance().DataFiles.string.GetPath('Map.img').ForEach((CityMap) => {
         CityMap.ForEach((MapID) => {
             if (mapid == MapID.GetName()) {
                 node = MapID;

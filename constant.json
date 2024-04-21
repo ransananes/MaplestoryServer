@@ -9,7 +9,10 @@
     "WORLD_RANKING": false,
     "EVENTS": "test",
     "HOST": "localhost",
-    "DB_USER": "root",
-    "DB_PASS": "",
-    "DB_SELECT": "mapleheroic"
+    "DB": {
+        "host": "localhost",
+        "user": "root",
+        "password": "",
+        "database": "mapleheroic"
+    }
 }

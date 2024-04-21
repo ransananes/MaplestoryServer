@@ -1,27 +1,23 @@
 const server = require('../server');
-const PacketHandler = require('../../handler/packetHandler');
+const PacketHandler = require('../../handler/PacketHandler');
 const PacketWriter = require('../MapleWriter');
 const PacketReader = require('../MapleReader');
 const config = require('../../constant.json');
 const mysql = require('mysql');
 const nx = require('../../provider/nx');
 const MapleMap = require('../../client/MapleMap');
-const localServer = class orginizeMapleChannel {
+
+const localServer = class MapleChannel {
     constructor(args) {
-        this.name = args[0] || 'channel';
-        this.port = args[1] || 7575;
+        this.name = 'channel';
+        this.port = 7575;
         this.clients = new Map();
         this.server = new server(this.name, this.port, this.clients);
-        this.dbConnInfo = {
-            host: config.HOST || 'localhost',
-            user: config.DB_USER || 'root',
-            password: config.DB_PASS || '',
-            database: config.DB_SELECT || 'mapleheroic'
-        };
+        PacketHandler.getInstance().forAllFiles(`${process.cwd()}\\handler\\handlers\\${this.name}\\`, '.js', fileName => require(fileName));
     }
 
     pinger() {
-        packetHandler.setHandler(0x0018, client => { /// PONG
+        PacketHandler.getInstance().setHandler(0x0018, client => { /// PONG
             client.responseTime = new Date().getTime()
             client.ponged = true;
         });
@@ -52,36 +48,8 @@ const localServer = class orginizeMapleChannel {
         }, 15000); // Check every 15 sec if player response.
     }
 
-    connSQL() {
-        const conn = mysql.createConnection(this.dbConnInfo);
-        conn.connect(err => {
-            if (err) throw err;
-            console.log(`Successfully connected to database server!`);
-        });
-        return conn;
-    }
 
-    initialize() {
-        global.DataFiles = {
-            character: new nx.file(`${__dirname}/../../provider/nx/Character.nx`),
-            item: new nx.file(`${__dirname}/../../provider/nx/Item.nx`),
-            string: new nx.file(`${__dirname}/../../provider/nx/String.nx`),
-            map: new nx.file(`${__dirname}/../../provider/nx/Map.nx`),
-            mob: new nx.file(`${__dirname}/../../provider/nx/Mob.nx`),
-            npc: new nx.file(`${__dirname}/../../provider/nx/Npc.nx`),
-            skill: new nx.file(`${__dirname}/../../provider/nx/Skill.nx`),
-            reactor: new nx.file(`${__dirname}/../../provider/nx/Reactor.nx`),
-            etc: new nx.file(`${__dirname}/../../provider/nx/Etc.nx`),
-        };
-        global.config = require('../../constant.json');
-        global.PacketWriter = PacketWriter;
-        global.packetReader = PacketReader;
-        global.packetHandler = new PacketHandler();
-        global.sqlConn = this.connSQL();
-        packetHandler.forAllFiles(`${process.cwd()}\\handler\\handlers`, '*.js', fileName => require(fileName));
-    }
 }
 
-const local = new localServer(process.argv[2].split(','));
-local.initialize();
-local.pinger();
+const serverChannel = new localServer(process.argv[2].split(','));
+serverChannel.pinger();

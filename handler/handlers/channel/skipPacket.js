@@ -1,1 +1,3 @@
-packetHandler.skip(0x006B);
+const PacketHandler = require('../../PacketHandler');
+
+PacketHandler.getInstance().skip(0x006B);

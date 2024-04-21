@@ -1,4 +1,8 @@
-packetHandler.setHandler(0x0005, async function (client, reader) { // CHARLIST_REQUEST
+const PacketHandler = require('../../PacketHandler');
+const PacketWriter = require('../../../net/MapleWriter');
+
+
+PacketHandler.getInstance().setHandler(0x0005, async function (client, reader) { // CHARLIST_REQUEST
     //if (reader.readUInt8() !== 2) return;
     reader.readUInt8()
     let worldid = reader.readUInt8();
@@ -23,7 +27,7 @@ packetHandler.setHandler(0x0005, async function (client, reader) { // CHARLIST_R
         character.addStats(packet);
         character.addAvatar(packet);
     }
-    packet.writeUInt8(Number(!config.ENABLE_PIC)); // PIC registered
+    packet.writeUInt8(0); // PIC registered
     packet.writeUInt32(client.account.characterslots); // Max Characters
     client.getSocket().sendPacket(packet);
 });

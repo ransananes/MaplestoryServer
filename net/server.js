@@ -1,14 +1,29 @@
 const net = require('net');
 const MapleClient = require('../client/MapleClient');
 const MaplePacket = require('./MaplePacket');
+const PacketWriter = require('./MapleWriter');
+const PacketHandler = require('../handler/PacketHandler');
 const MapleCrypto = require('./crypto/main');
 const crypto = require('crypto');
 const PacketReader = require('./MapleReader');
+const config = require('../constant.json')
+// sql con
+const mysql = require('mysql');
+
 module.exports = class Server {
     constructor(name, port = 8484, clients) {
         this.instance = name;
         this.clients = clients;
         this.tcpServer = this.tcp().listen(port);
+    }
+
+    connectSQL() {
+        const conn = mysql.createConnection(config.DB);
+        conn.connect(err => {
+            if (err) throw err;
+            console.log(`Successfully connected to database server!`);
+        });
+        return conn;
     }
 
     tcp() {
@@ -71,7 +86,7 @@ module.exports = class Server {
             client.setClientSequence(MapleCrypto.morphSequence(client.getClientSequence()));
 
             const reader = new PacketReader(packet);
-            const handler = packetHandler.getHandler(reader.readInt16());
+            const handler = PacketHandler.getInstance().getHandler(reader.readInt16());
             try {
                 await handler(client, reader);
             } catch (exception) {
@@ -91,7 +106,8 @@ module.exports = class Server {
     }
 
     onEnd(client) {
-        //console.log(`[CLIENT SIGNALS TO END CONNECTION!]`);
+        
+        console.log(`[CLIENT SIGNALS TO END CONNECTION!]`);
     }
 
 };

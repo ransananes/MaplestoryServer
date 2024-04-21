@@ -1,6 +1,8 @@
+const PacketHandler = require('../../PacketHandler');
+
 const { getAuthSuccess } = require("./auth/authFunctions");
 
-packetHandler.setHandler(0x7, async function (client, reader) {
+PacketHandler.getInstance().setHandler(0x7, async function (client, reader) {
   // check for tos
   console.log("reached tos");
   console.log(client);

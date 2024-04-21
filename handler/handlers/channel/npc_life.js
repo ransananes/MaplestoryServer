@@ -1,4 +1,6 @@
-packetHandler.setHandler(0x00C5, function (client, reader) {
+const PacketHandler = require('../../PacketHandler');
+
+PacketHandler.getInstance().setHandler(0x00C5, function (client, reader) {
     const length = reader.buffer.length - reader.offset;
     const packet = new PacketWriter(0x00104);
     if (length == 6) { // NPC Talk

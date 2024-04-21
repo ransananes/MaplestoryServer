@@ -1,4 +1,6 @@
-packetHandler.setHandler(0x0017, function (client, reader) {
+const PacketHandler = require('../../PacketHandler');
+
+PacketHandler.getInstance().setHandler(0x0017, function (client, reader) {
 	// Deleting character
 
 	const pic = reader.readString();
