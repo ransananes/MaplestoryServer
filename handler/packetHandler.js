@@ -4,18 +4,19 @@ const fs = require('fs');
 // directories to exclude while handling packets
 const excludeDirs = require('./handlers/login/auth/excludeDirs');
 
-module.exports = class PacketHandler {
+class PacketHandler {
     constructor() {
         this._handlers = new Map();
         this._skipedHandelers = new Set();
         this._handlerCount = 0;
+        this.instance = this;
     }
 
     setHandler(opCode, callback) {
         if (this._handlers.has(opCode)) return;
         this._handlers.set(opCode, callback);
         this._handlerCount++;
-        console.log(`[PacketHandler] registred new handler for 0x${opCode.toString(16)}`);
+        console.log(`[PacketHandler] registered new handler for 0x${opCode.toString(16)}`);
     }
 
     getHandler(opCode) {
@@ -37,7 +38,6 @@ module.exports = class PacketHandler {
     handlerNotFoundHandler(client, packet) {
         packet.offset = 0;
         console.log(`Unhandled packet: 0x${packet.readUInt16().toString(16)}`);
-        console.log(packet.buffer);
     }
 
     findJSFiles(directoryPath, files, filter) {
@@ -70,9 +70,11 @@ module.exports = class PacketHandler {
 
     static getInstance() {
         if (!PacketHandler.instance) {
+            console.log("Creating another instance");
             PacketHandler.instance = new PacketHandler();
         }
         return PacketHandler.instance;
     }
     
 };
+module.exports = PacketHandler;

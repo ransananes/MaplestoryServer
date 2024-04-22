@@ -1,5 +1,6 @@
 const MapleServerInstance = require("./net/MapleServerInstance");
 const MapleServer = require("./net/MapleServer");
+const PacketHandler = require("./handler/PacketHandler");
 
 // instances: server
 //           /    \
@@ -8,6 +9,7 @@ const MapleServer = require("./net/MapleServer");
 //                 / \
 //                 channels
 
-const data = new MapleServer();
+//const data = new MapleServer();
+const packets = new PacketHandler();
 const Instances = new MapleServerInstance();
 

@@ -2,29 +2,27 @@
 
 ### Login Server
 🟢 Client login and automatic registration.\
-🟢 World selection feature.\
-🟢 Multiworld functionality allowing users to choose displayed worlds.\
 🟠 Partial implementation of channel selection. Players spawn on the default channel.\
-🟢 Character creation with spawning in a basic state.\
-🟢 Character deletion capability.\
-🟢 Character selection with spawning in a basic state.
+🔴 Character creation with spawning in a basic state.\
+🔴 Character deletion capability.\
+🔴 Character selection with spawning in a basic state.
 
 ### Channel Server
-🟠 Portals functionality: Players spawn in a "random" position within the map upon entering portals.\
-🟠 Script portals are implemented but require recoding.\
+🔴 Portals functionality: Players spawn in a "random" position within the map upon entering portals.\
+🔴 Script portals are implemented but require recoding.\
 🔴 Skills system not yet implemented.\
 🔴 Pets feature not implemented.\
-🟠 Basic inventory operations implemented, although items may not display correctly to the client.\
-🟠 Player equipment display implemented for other players, but not for the player's own equipment.\
-🟠 Monster spawn feature enabled, but monsters lack skills and cannot attack or cause harm.\
-🟢 NPCs spawn, with dialogue, selection, and lifelike behavior.\
+🔴 Basic inventory operations implemented, although items may not display correctly to the client.\
+🔴 Player equipment display implemented for other players, but not for the player's own equipment.\
+🔴 Monster spawn feature enabled, but monsters lack skills and cannot attack or cause harm.\
+🔴 NPCs spawn, with dialogue, selection, and lifelike behavior.\
 🔴 Character info functionality not implemented.\
 🔴 Cash shop feature not implemented.\
 🔴 Guild, party, trade, and friends operations are not yet available.\
 🟢 Support for Nx file format reading.\
-🟠 Player chat feature enabled for public communication and commands, with only public chat implemented.\
-🟢 Multiplayer functionality working, though may have bugs when changing maps.\
-🟠 Basic player emotes available, limited to default options.
+🔴 Player chat feature enabled for public communication and commands, with only public chat implemented.\
+🔴 Multiplayer functionality working, though may have bugs when changing maps.\
+🔴 Basic player emotes available, limited to default options.
 
 ## Emulator Setup Instructions:
 To set up and install the MapleStory emulator, follow these steps:

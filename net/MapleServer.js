@@ -16,6 +16,7 @@ class MapleServer {
       reactor: new nx.file(`${__dirname}/../provider/nx/Reactor.nx`),
       etc: new nx.file(`${__dirname}/../provider/nx/Etc.nx`),
     };
+    this.instance = this;
   }
   static getInstance() {
     if (!MapleServer.instance) {

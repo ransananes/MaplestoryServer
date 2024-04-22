@@ -50,7 +50,7 @@ const MapleServer = require('../net/MapleServer');
      acceptTOS(accepted) {
         return new Promise((resolve, reject) => {
             let sql_query = `UPDATE accounts SET tos =${accepted} WHERE id = ${this.account.id}`;
-            sqlConn.query(sql_query, (error, results) => {
+            MapleServer.getInstance().sqlConnection.query(sql_query, (error, results) => {
                 if (error) return reject(error);
                 console.log('TOS updated successfully');
                 resolve(true);
@@ -154,9 +154,9 @@ const MapleServer = require('../net/MapleServer');
                  // create an account for now, #autoregister
                  if (results.length === 0) {
                      const hash = await bcrypt.hash(password, 10);
-                     await sqlConn.query(`INSERT INTO accounts (username, password) VALUES (${sqlConn.escape(username)}, '${hash}')`);
+                     await MapleServer.getInstance().sqlConnection.query(`INSERT INTO accounts (username, password) VALUES (${username}, '${hash}')`);
                      // Get the last inserted id
-                     sqlConn.query(`SELECT * FROM accounts WHERE username = ${sqlConn.escape(username)}`, async (error, results) => {
+                     MapleServer.getInstance().sqlConnection.query(`SELECT * FROM accounts WHERE username = ${username}`, async (error, results) => {
                      this.account = results[0];
                     });
                      return resolve(23);

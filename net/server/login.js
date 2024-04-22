@@ -1,18 +1,17 @@
-const server = require("../server");
+const Server = require("../Server");
 const PacketHandler = require("../../handler/PacketHandler");
 const PacketWriter = require("../MapleWriter");
 const PacketReader = require("../MapleReader");
-const config = require("../../constant.json");
 const mysql = require("mysql");
-const nx = require("../../provider/nx");
+const { fork } = require("node:child_process")
 
 const loginServer = class MapleLogin {
   constructor() {
     this.name = "login";
+    console.log("Starting new server ~ login");
+    this.port = 8484
     this.clients = new Map();
-    this.server = new server("login", 8484, this.clients);
-    PacketHandler.getInstance().forAllFiles(`${process.cwd()}\\handler\\handlers\\${this.name}\\`, '.js', fileName => require(fileName));
- 
+    this.server = new Server(this.name, this.port, this.clients);
   }
 
   pinger() {
@@ -62,7 +61,7 @@ const loginServer = class MapleLogin {
         client.ponged = false;
         socket.sendPacket(packet);
       }
-    }, 5000); // Check every 15 sec if player response.
+    }, 10000); // Check every 15 sec if player response.
   }
 
 

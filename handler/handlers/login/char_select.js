@@ -1,5 +1,6 @@
 const PacketHandler = require('../../PacketHandler');
 const PacketWriter = require('../../../net/MapleWriter');
+const MapleServerInstance = require('../../../net/MapleServerInstance');
 
 function EnterChannel(client, character) {
     const world = client.getWorld();
@@ -12,11 +13,14 @@ function EnterChannel(client, character) {
     packet.writeUInt32(character.id);
     character.addStats(packet);
     character.addAvatar(packet);
+    console.log("Entering channel");
+    // process.send(client);
+    //process.send("CHILD TO PAPA -> TEST");
     client.getSocket().sendPacket(packet);
 }
 
+// Select character
 PacketHandler.getInstance().setHandler(0x0013, async function (client, reader) {
-    // Select character
     if (!client.account || !client.account.username) {
 		client.disconnect();
 		return;
