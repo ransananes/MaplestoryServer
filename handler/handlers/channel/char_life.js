@@ -9,14 +9,16 @@ PacketHandler.getInstance().setHandler(0x00df, function (client, reader) {
 
 // handle player movement
 PacketHandler.getInstance().setHandler(0x0029, async function (client, reader) {
-  const portal = reader.readUInt8();
-  //reader.skip(9); // unique value per-map?
+  //const portal = reader.readUInt8();
+  reader.skip(9); // unique value per-map?
+  reader.skip(1); // skip another one
 
   const MovableLife = new MapleLife();
 
   const movePath = MovableLife.decodeMovePath(reader, false);
   if (movePath.length === 0) {
-    client.disconnect("Empty move path");
+    console.log("Empty move path")
+    // client.disconnect("Empty move path");
     return;
   } else {
     client.getPlayer().location.x = MovableLife.x;
@@ -33,5 +35,5 @@ PacketHandler.getInstance().setHandler(0x0029, async function (client, reader) {
 
 // handle player movement
 PacketHandler.getInstance().setHandler(0x00cf, async function (client, reader) {
-    console.log("@@@@@@@@@@@@@@")
+    console.log("something with movement")
   });

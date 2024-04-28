@@ -14,12 +14,14 @@ module.exports = class MapleLife {
             this.previousX = this.x;
             this.previousY = this.y;
         }
-        let _x = reader.readInt16();
-        let _y = reader.readInt16();
+        let type = reader.readUInt8();
+        console.log(type);
+        let _x,_y;
+        // let _x = reader.readInt16();
+        // let _y = reader.readInt16();
 
         let elements = [];
-        for (let i = reader.readUInt8(); i > 0; i--) {
-            let type = reader.readUInt8();
+        // for (let i = reader.readUInt8(); i > 0; i--) {
             let element = {
                 type: type,
                 x: null,
@@ -42,12 +44,12 @@ module.exports = class MapleLife {
                     element.y = reader.readInt16();
                     element.velocityX = reader.readInt16();
                     element.velocityY = reader.readInt16();
+                    element.foothold = reader.readUInt16();
                     element.flushDelay = reader.readInt16();
                     if (type == 0xF) {
                         element.unknown2 = reader.readUInt16();
                     }
                     element.stance = reader.readUInt8();
-                    element.foothold = reader.readUInt16();
                     _x = element.x;
                     _y = element.y;
                     break;
@@ -112,7 +114,7 @@ module.exports = class MapleLife {
                 if (element.stance !== null) this.stance = element.stance;
             }
             elements.push(element);
-        }
+        // }
         return elements;
     };
 

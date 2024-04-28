@@ -76,4 +76,4 @@ const loginServer = class MapleLogin {
 };
 
 const serverLogin = new loginServer();
-serverLogin.pinger();
+//serverLogin.pinger();
