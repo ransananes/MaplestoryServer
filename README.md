@@ -2,7 +2,7 @@
 
 ### GENERAL 
 🟠 Rewrite the code. \
-🟠 Fit the server to custom client wirtten in cpp using HeavenMS.
+🟠 Fit the server to custom client wirtten in cpp using HeavenMS. \
 🟢 Split server login and channel server.
 
 ### Login Server
